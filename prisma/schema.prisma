@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String       @id @default(cuid()) // Changed to cuid() for better performance in SQLite
+  email      String      @unique
+  name       String?
+  // Simplified auth fields
+  auth       Auth?       // One-to-one relation with auth details
+  // Main app functionality
+  calculations Calculation[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("users")
+}
+
+// Separate authentication details into its own model
+model Auth {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailVerified DateTime?
+
+  // OAuth related fields
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("auth")
+}
+
+// Simplified calculation history
+model Calculation {
+  id            String    @id @default(cuid())
+  inputValue    Float
+  equipmentName String
+  outputValue   Float
+  notes         String?   // Optional field for any additional information
+
+  // User relation
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime  @default(now())
+
+  // Add indexes for common queries
+  @@index([userId, createdAt])
+  @@index([equipmentName])
+  @@map("calculations")
+}
+
+// Simplified Account model for OAuth
+model Account {
+  id                String  @id @default(cuid())
+  authId           String
+  auth             Auth    @relation(fields: [authId], references: [id], onDelete: Cascade)
+  type             String
+  provider         String
+  providerAccountId String
+  refresh_token    String?
+  access_token     String?
+  expires_at       Int?
+  token_type       String?
+  scope            String?
+  id_token         String?
+  session_state    String?
+
+  @@unique([provider, providerAccountId])
+  @@index([authId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  authId       String
+  auth         Auth     @relation(fields: [authId], references: [id], onDelete: Cascade)
+  expires      DateTime
+
+  @@index([authId])
+  @@map("sessions")
+}
+
+// Simplified verification token
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
