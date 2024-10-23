@@ -3,16 +3,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Menu,
-  X,
-  Calculator,
-  Home,
-  Calendar,
-  BookOpen,
-  Users,
-  Github,
-} from "lucide-react";
+import { Menu, X, Calculator, Home, Calendar, Users } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { SignInButton, SignOutButton } from "@/components/auth/authbuttons";
 import {
@@ -25,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import type { NavItem } from "./types";
+import type { NavItem } from "@/lib/types/navtypes";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
