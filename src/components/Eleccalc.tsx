@@ -38,10 +38,10 @@ const ElectricalCalculator = () => {
   const calculateMissing = () => {
     if (power && voltage) {
       setCurrent(power / voltage);
-      setResistance((voltage * voltage) / power);
+      setResistance(voltage / power);
     } else if (power && current) {
       setVoltage(power / current);
-      setResistance(power / (current * current));
+      setResistance(voltage / current);
     } else if (voltage && current) {
       setPower(voltage * current);
       setResistance(voltage / current);
