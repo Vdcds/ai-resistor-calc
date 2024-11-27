@@ -1,9 +1,9 @@
-import HomePage from "@/components/Home";
 import React from "react";
+import ElectricalCalculator from "@/components/Eleccalc";
 const page = () => {
   return (
     <div>
-      <HomePage></HomePage>
+      <ElectricalCalculator></ElectricalCalculator>
     </div>
   );
 };
