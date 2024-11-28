@@ -39,6 +39,7 @@ const ElectricalCalculator = () => {
 
   const calculateMissingValues = () => {
     try {
+      // Create copies of current values
       let newPower = power;
       let newCurrent = current;
       let newVoltage = voltage;
@@ -66,33 +67,38 @@ const ElectricalCalculator = () => {
       // Calculate missing values using Ohm's Law and Power equations
       if (voltage && current) {
         // V and I known
-        newResistance = voltage / current; // R = V/I
-        newPower = voltage * current; // P = V*I
+        if (resistance === null) newResistance = voltage / current;
+        // Only calculate power if it's null
+        if (power === null) newPower = voltage * current;
       } else if (voltage && resistance) {
         // V and R known
-        newCurrent = voltage / resistance; // I = V/R
-        newPower = (voltage * voltage) / resistance; // P = V²/R
+        if (current === null) newCurrent = voltage / resistance;
+        if (power === null) newPower = (voltage * voltage) / resistance;
       } else if (current && resistance) {
         // I and R known
-        newVoltage = current * resistance; // V = I*R
-        newPower = current * current * resistance; // P = I²*R
+        if (voltage === null) newVoltage = current * resistance;
+        if (power === null) newPower = current * current * resistance;
       } else if (power && current) {
         // P and I known
-        newVoltage = power / current; // V = P/I
-        newResistance = power / (current * current); // R = P/I²
+        if (voltage === null) newVoltage = power / current;
+        if (resistance === null) newResistance = power / (current * current);
       } else if (power && voltage) {
         // P and V known
-        newCurrent = power / voltage; // I = P/V
-        newResistance = (voltage * voltage) / power; // R = V²/P
+        if (current === null) newCurrent = power / voltage;
+        if (resistance === null) newResistance = (voltage * voltage) / power;
       }
 
-      // Round to 3 decimal places for more precision
-      setPower(Number(newPower?.toFixed(3)));
-      setCurrent(Number(newCurrent?.toFixed(3)));
-      setVoltage(Number(newVoltage?.toFixed(3)));
-      setResistance(Number(newResistance?.toFixed(3)));
+      // Only update state for values that were null
+      if (power === null && newPower !== null)
+        setPower(Number(newPower.toFixed(3)));
+      if (current === null && newCurrent !== null)
+        setCurrent(Number(newCurrent.toFixed(3)));
+      if (voltage === null && newVoltage !== null)
+        setVoltage(Number(newVoltage.toFixed(3)));
+      if (resistance === null && newResistance !== null)
+        setResistance(Number(newResistance.toFixed(3)));
 
-      setError(null); // Clear any previous errors
+      setError(null);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
