@@ -39,7 +39,6 @@ const ElectricalCalculator = () => {
 
   const calculateMissingValues = () => {
     try {
-      // Create copies of current values
       let newPower = power;
       let newCurrent = current;
       let newVoltage = voltage;
@@ -68,16 +67,15 @@ const ElectricalCalculator = () => {
       if (voltage && current) {
         // V and I known
         if (resistance === null) newResistance = voltage / current;
-        // Only calculate power if it's null
         if (power === null) newPower = voltage * current;
       } else if (voltage && resistance) {
         // V and R known
         if (current === null) newCurrent = voltage / resistance;
-        if (power === null) newPower = (voltage * voltage) / resistance;
+        if (power === null) newPower = (voltage * voltage) / resistance; // P = V²/R
       } else if (current && resistance) {
         // I and R known
         if (voltage === null) newVoltage = current * resistance;
-        if (power === null) newPower = current * current * resistance;
+        if (power === null) newPower = current * current * resistance; // P = I²R
       } else if (power && current) {
         // P and I known
         if (voltage === null) newVoltage = power / current;
@@ -88,15 +86,11 @@ const ElectricalCalculator = () => {
         if (resistance === null) newResistance = (voltage * voltage) / power;
       }
 
-      // Only update state for values that were null
-      if (power === null && newPower !== null)
-        setPower(Number(newPower.toFixed(3)));
-      if (current === null && newCurrent !== null)
-        setCurrent(Number(newCurrent.toFixed(3)));
-      if (voltage === null && newVoltage !== null)
-        setVoltage(Number(newVoltage.toFixed(3)));
-      if (resistance === null && newResistance !== null)
-        setResistance(Number(newResistance.toFixed(3)));
+      // Only update null values with calculated results
+      if (power === null) setPower(Number(newPower?.toFixed(3)));
+      if (current === null) setCurrent(Number(newCurrent?.toFixed(3)));
+      if (voltage === null) setVoltage(Number(newVoltage?.toFixed(3)));
+      if (resistance === null) setResistance(Number(newResistance?.toFixed(3)));
 
       setError(null);
     } catch (error) {
