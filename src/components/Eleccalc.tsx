@@ -202,8 +202,8 @@ const ElectricalCalculator = () => {
           <CardContent className="space-y-6">
             <div>
               <div className="flex justify-between mb-2">
-                <label>Daily Usage (hours)</label>
-                <span>{duration} hours</span>
+                <label className="text-white">Daily Usage (hours)</label>
+                <span className="text-white">{duration} hours</span>
               </div>
               <Slider
                 min={1}
@@ -215,8 +215,8 @@ const ElectricalCalculator = () => {
             </div>
             <div>
               <div className="flex justify-between mb-2">
-                <label>Electricity Rate (₹/kWh)</label>
-                <span>₹{rate}/kWh</span>
+                <label className="text-white">Electricity Rate (₹/kWh)</label>
+                <span className="text-white">₹{rate}/kWh</span>
               </div>
               <Slider
                 min={1}
@@ -324,19 +324,19 @@ const ElectricalCalculator = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
-              <span>Total Power Consumption:</span>
+              <span className="text-white">Total Power Consumption:</span>
               <span className="font-semibold text-yellow-400">
                 {householdValues.powerInKW.toFixed(2)} kW
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span>Daily Cost:</span>
+              <span className="text-white">Daily Cost:</span>
               <span className="font-semibold text-green-400">
                 ₹{householdValues.dailyCost.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span>Monthly Cost:</span>
+              <span className="text-white">Monthly Cost:</span>
               <span className="font-semibold text-green-400">
                 ₹{householdValues.monthlyCost.toFixed(2)}
               </span>
