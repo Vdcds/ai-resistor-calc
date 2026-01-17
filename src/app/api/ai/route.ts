@@ -3,6 +3,12 @@ import { NextRequest } from "next/server";
 
 export const maxDuration = 30;
 
+const languageInstructions: Record<string, string> = {
+  en: "Respond in English.",
+  hi: "हिंदी में जवाब दें। (Respond in Hindi language using Devanagari script)",
+  mr: "मराठीत उत्तर द्या। (Respond in Marathi language using Devanagari script)",
+};
+
 export async function POST(req: NextRequest) {
   const googleApiKey = process.env.GOOGLE_API_KEY;
 
@@ -14,20 +20,26 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { prompt } = await req.json();
+    const { prompt, language = "en" } = await req.json();
     const genAI = new GoogleGenerativeAI(googleApiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+
+    const langInstruction = languageInstructions[language] || languageInstructions.en;
 
     const systemPrompt = {
       role: "system",
-      content: `You are an electrical engineering expert. Based on the following power consumption data:
+      content: `You are an electrical engineering expert. ${langInstruction}
+
+Based on the following power consumption data:
       ${prompt}
 
-      Provide exactly 3 energy-saving tips that are:
-      1. Practical and specific
-      2. Focused on cost savings
-      3. Each under 100 characters
-      4. Related to the actual power consumption provided`,
+Provide exactly 3 energy-saving tips that are:
+1. Practical and specific
+2. Focused on cost savings
+3. Each under 100 characters
+4. Related to the actual power consumption provided
+
+${langInstruction}`,
     };
 
     const result = await model.generateContent(systemPrompt.content);
