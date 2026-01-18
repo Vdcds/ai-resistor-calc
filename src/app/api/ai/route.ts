@@ -38,6 +38,7 @@ Provide exactly 3 energy-saving tips that are:
 2. Focused on cost savings
 3. Each under 100 characters
 4. Related to the actual power consumption provided
+5 . Suggest actual alternative products or methods where applicable for example "Use [company/product name] instead of [current product name]".
 
 ${langInstruction}`,
     };

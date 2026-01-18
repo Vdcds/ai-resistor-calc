@@ -226,7 +226,7 @@ const EquipmentSelector = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-3 p-4 rounded-xl bg-secondary/20 border border-border/50"
+      className="grid grid-cols-1 sm:grid-cols-[1fr,auto] gap-3 p-4 rounded-2xl bg-gradient-to-br from-background/80 to-primary/5 border border-primary/10 hover:border-primary/20 transition-colors"
     >
       {/* Top Row: Equipment Selector */}
       <div className="relative sm:col-span-2" ref={dropdownRef}>
@@ -236,16 +236,16 @@ const EquipmentSelector = ({
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           aria-label={t("calculator", "selectEquipment")}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-background/50 border border-border/50 text-left hover:border-amber-500/50 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none transition-all"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-background/70 border border-primary/20 text-left hover:border-primary/40 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
         >
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/10 to-chart-4/10 flex items-center justify-center shrink-0 border border-primary/20">
             {selectedPreset ? (
               <span className="text-lg">{selectedPreset.icon}</span>
             ) : (
-              <Zap className="w-4 h-4 text-amber-500" />
+              <Zap className="w-4 h-4 text-primary" />
             )}
           </div>
-          <span className="flex-1 truncate font-medium">
+          <span className="flex-1 truncate font-semibold">
             {getEquipmentDisplayName() || t("calculator", "selectEquipment")}
           </span>
           <ChevronDown
@@ -260,11 +260,11 @@ const EquipmentSelector = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute z-50 top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-2xl shadow-black/20 overflow-hidden"
+              className="absolute z-50 top-full left-0 right-0 mt-2 bg-card/95 backdrop-blur-xl border border-primary/20 rounded-2xl shadow-2xl shadow-primary/10 overflow-hidden"
               role="listbox"
             >
               {/* Search Input */}
-              <div className="p-3 border-b border-border/50 bg-secondary/30">
+              <div className="p-3 border-b border-primary/10 bg-primary/5">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
@@ -272,7 +272,7 @@ const EquipmentSelector = ({
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="pl-10 h-10 bg-background border-border/50 focus:border-amber-500"
+                    className="pl-10 h-10 bg-background border-primary/20 focus:border-primary rounded-xl"
                     autoFocus
                     aria-label={t("calculator", "searchEquipment")}
                   />
@@ -280,7 +280,7 @@ const EquipmentSelector = ({
               </div>
 
               {/* Options List */}
-              <div ref={listRef} className="max-h-56 overflow-y-auto py-1">
+              <div ref={listRef} className="max-h-56 overflow-y-auto py-2">
                 {filteredPresets.length > 0 ? (
                   filteredPresets.map((preset, index) => {
                     const displayName = getPresetDisplayName(preset.nameKey);
@@ -292,19 +292,20 @@ const EquipmentSelector = ({
                         onMouseEnter={() => setHighlightedIndex(index)}
                         role="option"
                         aria-selected={isSelected}
-                        className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left ${
+                        className={`w-full flex items-center gap-3 px-4 py-3 mx-2 rounded-xl transition-all text-left ${
                           highlightedIndex === index
-                            ? "bg-amber-500/10"
+                            ? "bg-primary/10 border-l-2 border-primary"
                             : "hover:bg-secondary/50"
-                        } ${isSelected ? "bg-amber-500/5" : ""}`}
+                        } ${isSelected ? "bg-primary/5" : ""}`}
+                        style={{ width: 'calc(100% - 1rem)' }}
                       >
                         <span className="text-xl w-8 text-center">{preset.icon}</span>
                         <span className="flex-1 font-medium">{displayName}</span>
-                        <span className="text-sm text-muted-foreground tabular-nums">
+                        <span className="text-sm text-muted-foreground tabular-nums bg-secondary/50 px-2 py-0.5 rounded-md">
                           {preset.watts}W
                         </span>
                         {isSelected && (
-                          <Check className="w-4 h-4 text-amber-500" />
+                          <Check className="w-4 h-4 text-primary" />
                         )}
                       </button>
                     );
@@ -312,10 +313,11 @@ const EquipmentSelector = ({
                 ) : search.trim() ? (
                   <button
                     onClick={handleCustomInput}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-amber-500/10 transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-4 py-3 mx-2 rounded-xl hover:bg-primary/10 transition-colors text-left"
+                    style={{ width: 'calc(100% - 1rem)' }}
                   >
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                      <Plus className="w-4 h-4 text-amber-500" />
+                    <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Plus className="w-4 h-4 text-primary" />
                     </div>
                     <span className="font-medium">
                       {language === "en" ? `Add "${search}" as custom equipment` :
@@ -340,14 +342,14 @@ const EquipmentSelector = ({
       <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
         {/* Quantity Controls */}
         <div className="flex items-center gap-2">
-          <label className="text-xs text-muted-foreground uppercase tracking-wide">{t("calculator", "quantity")}</label>
-          <div className="flex items-center bg-background/50 rounded-lg border border-border/50 overflow-hidden">
+          <label className="text-xs text-muted-foreground uppercase tracking-wider font-medium">{t("calculator", "quantity")}</label>
+          <div className="flex items-center bg-background/70 rounded-xl border border-primary/20 overflow-hidden">
             <button
               onClick={() => onUpdate({ quantity: Math.max(1, equipment.quantity - 1) })}
-              className="w-9 h-9 flex items-center justify-center hover:bg-secondary/80 transition-colors focus:outline-none focus:bg-secondary"
+              className="w-10 h-10 flex items-center justify-center hover:bg-primary/10 transition-colors focus:outline-none focus:bg-primary/10"
               aria-label="Decrease quantity"
             >
-              <Minus className="w-4 h-4" />
+              <Minus className="w-4 h-4 text-primary" />
             </button>
             <input
               ref={quantityInputRef}
@@ -364,22 +366,22 @@ const EquipmentSelector = ({
                   onUpdate({ quantity: Math.max(1, equipment.quantity - 1) });
                 }
               }}
-              className="w-12 h-9 text-center text-sm font-semibold bg-transparent border-x border-border/50 focus:outline-none focus:bg-secondary/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-12 h-10 text-center text-sm font-bold bg-transparent border-x border-primary/20 focus:outline-none focus:bg-primary/5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               aria-label="Quantity"
             />
             <button
               onClick={() => onUpdate({ quantity: equipment.quantity + 1 })}
-              className="w-9 h-9 flex items-center justify-center hover:bg-secondary/80 transition-colors focus:outline-none focus:bg-secondary"
+              className="w-10 h-10 flex items-center justify-center hover:bg-primary/10 transition-colors focus:outline-none focus:bg-primary/10"
               aria-label="Increase quantity"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-primary" />
             </button>
           </div>
         </div>
 
         {/* Watts Input */}
         <div className="flex items-center gap-2">
-          <label className="text-xs text-muted-foreground uppercase tracking-wide">{t("calculator", "watts")}</label>
+          <label className="text-xs text-muted-foreground uppercase tracking-wider font-medium">{t("calculator", "watts")}</label>
           <div className="relative">
             <input
               ref={wattsInputRef}
@@ -397,10 +399,10 @@ const EquipmentSelector = ({
                   onUpdate({ watts: Math.max(0, equipment.watts - 10) });
                 }
               }}
-              className="w-24 h-9 px-3 pr-8 text-sm font-semibold rounded-lg bg-background/50 border border-border/50 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-24 h-10 px-3 pr-8 text-sm font-bold rounded-xl bg-background/70 border border-primary/20 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               aria-label={t("calculator", "watts")}
             />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none font-medium">
               W
             </span>
           </div>
@@ -408,11 +410,11 @@ const EquipmentSelector = ({
 
         {/* Total Display */}
         <div className="flex items-center gap-2 ml-auto">
-          <div className="text-right px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
-            <p className="text-xs text-amber-500/70 uppercase tracking-wide">
+          <div className="text-right px-4 py-2 rounded-xl bg-gradient-to-br from-primary/10 to-chart-4/10 border border-primary/20">
+            <p className="text-xs text-primary/70 uppercase tracking-wider font-medium">
               {language === "en" ? "Total" : language === "hi" ? "कुल" : "एकूण"}
             </p>
-            <p className="text-base font-bold text-amber-500 tabular-nums">
+            <p className="text-lg font-bold text-primary tabular-nums">
               {(equipment.watts * equipment.quantity).toLocaleString()}W
             </p>
           </div>
@@ -422,10 +424,10 @@ const EquipmentSelector = ({
             variant="ghost"
             size="icon"
             onClick={onRemove}
-            className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
+            className="h-10 w-10 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
             aria-label="Remove equipment"
           >
-            <Trash2 size={16} />
+            <Trash2 size={18} />
           </Button>
         </div>
       </div>
@@ -629,416 +631,449 @@ const ElectricalCalculator = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 15;
+    const margin = 20;
     const contentWidth = pageWidth - margin * 2;
-    let y = 15;
+    let y = 0;
 
-    // Color palette
+    // Professional warm color palette
     const colors = {
-      primary: [245, 158, 11] as [number, number, number],      // Amber
-      primaryDark: [217, 119, 6] as [number, number, number],   // Darker amber
-      secondary: [16, 185, 129] as [number, number, number],    // Emerald
-      dark: [30, 30, 30] as [number, number, number],
-      gray: [100, 100, 100] as [number, number, number],
-      lightGray: [150, 150, 150] as [number, number, number],
-      bgLight: [254, 252, 232] as [number, number, number],     // Amber-50
-      bgGray: [249, 250, 251] as [number, number, number],
+      primary: [139, 119, 42] as [number, number, number],
+      primaryLight: [180, 165, 100] as [number, number, number],
+      accent: [200, 162, 100] as [number, number, number],
+      green: [76, 115, 55] as [number, number, number],
+      greenLight: [200, 215, 180] as [number, number, number],
+      dark: [35, 35, 35] as [number, number, number],
+      gray: [90, 90, 90] as [number, number, number],
+      lightGray: [140, 140, 140] as [number, number, number],
+      cream: [250, 247, 240] as [number, number, number],
       white: [255, 255, 255] as [number, number, number],
+      tableHeader: [245, 242, 235] as [number, number, number],
+      tableAlt: [252, 250, 247] as [number, number, number],
     };
 
-    // Language-specific labels
+    // Currency symbol (using INR text for compatibility)
+    const currency = "Rs.";
+
+    // Labels
     const labels = {
       en: {
-        title: "ENERGY CONSUMPTION BILL",
+        title: "ENERGY CONSUMPTION REPORT",
         subtitle: "Household Energy Calculator",
-        billTo: "BILL TO",
+        preparedFor: "Prepared For",
         date: "Date",
-        billNo: "Bill No",
-        usageParams: "USAGE PARAMETERS",
+        reportId: "Report ID",
+        usage: "USAGE PARAMETERS",
         dailyHours: "Daily Usage Hours",
         electricityRate: "Electricity Rate",
-        itemizedConsumption: "ITEMIZED CONSUMPTION",
-        item: "ITEM",
-        qty: "QTY",
-        power: "POWER",
-        total: "TOTAL",
-        subtotal: "Subtotal",
+        breakdown: "CONSUMPTION BREAKDOWN",
+        appliance: "Appliance",
+        qty: "Qty",
+        watts: "Watts",
+        total: "Total",
+        roomTotal: "Subtotal",
         perDay: "/day",
-        summary: "BILL SUMMARY",
-        totalPower: "Total Power Consumption",
-        dailyCost: "Estimated Daily Cost",
-        monthlyCost: "Estimated Monthly Cost",
-        energyTips: "ENERGY SAVING TIPS",
-        footer1: "This is a computer-generated estimate for reference purposes only.",
+        summary: "COST SUMMARY",
+        totalPower: "Total Power",
+        dailyCost: "Daily Cost",
+        monthlyCost: "Monthly Cost",
+        yearlyCost: "Yearly Cost",
+        tips: "ENERGY SAVING TIPS",
+        footer1: "This is an estimate for reference purposes only.",
         footer2: "Actual consumption may vary based on usage patterns.",
-        footer3: "Thank you for using Energy Calculator",
-        rooms: "rooms",
-        equipment: "equipment items",
+        footer3: "Generated by Energy Calculator",
+        hours: "hrs/day",
+        perKwh: "/kWh",
       },
       hi: {
-        title: "ऊर्जा खपत बिल",
-        subtitle: "घरेलू ऊर्जा कैलकुलेटर",
-        billTo: "बिल प्राप्तकर्ता",
-        date: "दिनांक",
-        billNo: "बिल नंबर",
-        usageParams: "उपयोग पैरामीटर",
-        dailyHours: "दैनिक उपयोग घंटे",
-        electricityRate: "बिजली दर",
-        itemizedConsumption: "विस्तृत खपत",
-        item: "उपकरण",
-        qty: "मात्रा",
-        power: "वॉट",
-        total: "कुल",
-        subtotal: "उप-योग",
-        perDay: "/दिन",
-        summary: "बिल सारांश",
-        totalPower: "कुल बिजली खपत",
-        dailyCost: "अनुमानित दैनिक लागत",
-        monthlyCost: "अनुमानित मासिक लागत",
-        energyTips: "ऊर्जा बचत सुझाव",
-        footer1: "यह केवल संदर्भ के लिए कंप्यूटर-जनित अनुमान है।",
-        footer2: "वास्तविक खपत उपयोग पैटर्न के आधार पर भिन्न हो सकती है।",
-        footer3: "एनर्जी कैलकुलेटर का उपयोग करने के लिए धन्यवाद",
-        rooms: "कमरे",
-        equipment: "उपकरण",
+        title: "ENERGY CONSUMPTION REPORT",
+        subtitle: "Household Energy Calculator",
+        preparedFor: "Prepared For",
+        date: "Date",
+        reportId: "Report ID",
+        usage: "USAGE PARAMETERS",
+        dailyHours: "Daily Usage Hours",
+        electricityRate: "Electricity Rate",
+        breakdown: "CONSUMPTION BREAKDOWN",
+        appliance: "Appliance",
+        qty: "Qty",
+        watts: "Watts",
+        total: "Total",
+        roomTotal: "Subtotal",
+        perDay: "/day",
+        summary: "COST SUMMARY",
+        totalPower: "Total Power",
+        dailyCost: "Daily Cost",
+        monthlyCost: "Monthly Cost",
+        yearlyCost: "Yearly Cost",
+        tips: "ENERGY SAVING TIPS",
+        footer1: "This is an estimate for reference purposes only.",
+        footer2: "Actual consumption may vary based on usage patterns.",
+        footer3: "Generated by Energy Calculator",
+        hours: "hrs/day",
+        perKwh: "/kWh",
       },
       mr: {
-        title: "ऊर्जा वापर बिल",
-        subtitle: "घरगुती ऊर्जा कॅल्क्युलेटर",
-        billTo: "बिल प्राप्तकर्ता",
-        date: "दिनांक",
-        billNo: "बिल क्रमांक",
-        usageParams: "वापर पॅरामीटर्स",
-        dailyHours: "दैनिक वापर तास",
-        electricityRate: "वीज दर",
-        itemizedConsumption: "तपशीलवार वापर",
-        item: "उपकरण",
-        qty: "संख्या",
-        power: "वॉट",
-        total: "एकूण",
-        subtotal: "उप-एकूण",
-        perDay: "/दिवस",
-        summary: "बिल सारांश",
-        totalPower: "एकूण वीज वापर",
-        dailyCost: "अंदाजे दैनिक खर्च",
-        monthlyCost: "अंदाजे मासिक खर्च",
-        energyTips: "ऊर्जा बचत सल्ले",
-        footer1: "हे केवळ संदर्भासाठी संगणक-व्युत्पन्न अंदाज आहे.",
-        footer2: "वास्तविक वापर वापर पद्धतींवर आधारित बदलू शकतो.",
-        footer3: "एनर्जी कॅल्क्युलेटर वापरल्याबद्दल धन्यवाद",
-        rooms: "खोल्या",
-        equipment: "उपकरणे",
+        title: "ENERGY CONSUMPTION REPORT",
+        subtitle: "Household Energy Calculator",
+        preparedFor: "Prepared For",
+        date: "Date",
+        reportId: "Report ID",
+        usage: "USAGE PARAMETERS",
+        dailyHours: "Daily Usage Hours",
+        electricityRate: "Electricity Rate",
+        breakdown: "CONSUMPTION BREAKDOWN",
+        appliance: "Appliance",
+        qty: "Qty",
+        watts: "Watts",
+        total: "Total",
+        roomTotal: "Subtotal",
+        perDay: "/day",
+        summary: "COST SUMMARY",
+        totalPower: "Total Power",
+        dailyCost: "Daily Cost",
+        monthlyCost: "Monthly Cost",
+        yearlyCost: "Yearly Cost",
+        tips: "ENERGY SAVING TIPS",
+        footer1: "This is an estimate for reference purposes only.",
+        footer2: "Actual consumption may vary based on usage patterns.",
+        footer3: "Generated by Energy Calculator",
+        hours: "hrs/day",
+        perKwh: "/kWh",
       },
     };
 
     const l = labels[language as keyof typeof labels] || labels.en;
+    const today = new Date();
+    const reportId = `EC-${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}`;
 
-    // Helper functions
-    const drawLine = (yPos: number, color: [number, number, number] = colors.lightGray, width: number = 0.3) => {
-      doc.setDrawColor(...color);
-      doc.setLineWidth(width);
-      doc.line(margin, yPos, pageWidth - margin, yPos);
-    };
-
-    const drawDashedLine = (yPos: number) => {
-      doc.setDrawColor(...colors.lightGray);
-      doc.setLineDashPattern([2, 2], 0);
-      doc.line(margin, yPos, pageWidth - margin, yPos);
-      doc.setLineDashPattern([], 0);
-    };
-
-    // ========== HEADER SECTION ==========
-    // Top accent bar
+    // ========== HEADER ==========
+    // Top bar
     doc.setFillColor(...colors.primary);
-    doc.rect(0, 0, pageWidth, 4, "F");
+    doc.rect(0, 0, pageWidth, 12, "F");
 
-    y = 20;
+    // Logo box
+    y = 25;
+    doc.setFillColor(...colors.cream);
+    doc.roundedRect(margin, y - 6, 45, 20, 3, 3, "F");
+    doc.setDrawColor(...colors.primaryLight);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(margin, y - 6, 45, 20, 3, 3, "S");
 
-    // Logo/Icon area
-    doc.setFillColor(...colors.bgLight);
-    doc.roundedRect(margin, y - 5, 40, 18, 2, 2, "F");
+    // Logo text
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(...colors.primaryDark);
-    doc.text("⚡", margin + 4, y + 7);
-    doc.setFontSize(10);
-    doc.text("ENERGY", margin + 14, y + 3);
-    doc.setFontSize(8);
+    doc.setFontSize(12);
+    doc.setTextColor(...colors.primary);
+    doc.text("ENERGY", margin + 8, y + 2);
+    doc.setFontSize(7);
     doc.setTextColor(...colors.gray);
-    doc.text("CALCULATOR", margin + 14, y + 9);
+    doc.text("CALCULATOR", margin + 8, y + 8);
 
-    // Title on right
+    // Title
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
     doc.setTextColor(...colors.dark);
-    const titleWidth = doc.getTextWidth(l.title);
-    doc.text(l.title, pageWidth - margin - titleWidth, y + 2);
+    doc.text(l.title, pageWidth - margin, y, { align: "right" });
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(...colors.gray);
-    const subtitleWidth = doc.getTextWidth(l.subtitle);
-    doc.text(l.subtitle, pageWidth - margin - subtitleWidth, y + 9);
+    doc.text(l.subtitle, pageWidth - margin, y + 7, { align: "right" });
 
-    y += 22;
-    drawLine(y, colors.primary, 0.5);
-    y += 12;
+    y += 25;
 
-    // ========== CUSTOMER & BILL INFO ==========
-    // Left: Customer info
-    doc.setFont("helvetica", "bold");
+    // Separator
+    doc.setDrawColor(...colors.primaryLight);
+    doc.setLineWidth(0.8);
+    doc.line(margin, y, pageWidth - margin, y);
+
+    y += 15;
+
+    // ========== CLIENT & REPORT INFO ==========
+    const infoBoxHeight = 28;
+    const leftBoxWidth = contentWidth * 0.58;
+    const rightBoxWidth = contentWidth * 0.38;
+    const gap = contentWidth * 0.04;
+
+    // Left box - Client
+    doc.setFillColor(...colors.cream);
+    doc.roundedRect(margin, y, leftBoxWidth, infoBoxHeight, 3, 3, "F");
+    doc.setDrawColor(...colors.primaryLight);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(margin, y, leftBoxWidth, infoBoxHeight, 3, 3, "S");
+
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...colors.gray);
-    doc.text(l.billTo, margin, y);
+    doc.text(l.preparedFor, margin + 10, y + 10);
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
     doc.setTextColor(...colors.dark);
-    doc.text(customerName.trim().toUpperCase(), margin, y + 7);
+    doc.text(customerName.trim().toUpperCase(), margin + 10, y + 21);
 
-    // Right: Bill details box
-    const today = new Date();
-    const billNo = `EC${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}`;
-
-    const infoBoxWidth = 60;
-    const infoBoxX = pageWidth - margin - infoBoxWidth;
-    doc.setFillColor(...colors.bgGray);
-    doc.roundedRect(infoBoxX, y - 4, infoBoxWidth, 20, 2, 2, "F");
+    // Right box - Report details
+    const rightBoxX = margin + leftBoxWidth + gap;
+    doc.setFillColor(...colors.cream);
+    doc.roundedRect(rightBoxX, y, rightBoxWidth, infoBoxHeight, 3, 3, "F");
+    doc.setDrawColor(...colors.primaryLight);
+    doc.roundedRect(rightBoxX, y, rightBoxWidth, infoBoxHeight, 3, 3, "S");
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...colors.gray);
-    doc.text(l.date + ":", infoBoxX + 4, y + 2);
-    doc.text(l.billNo + ":", infoBoxX + 4, y + 10);
+    doc.text(l.date + ":", rightBoxX + 8, y + 10);
+    doc.text(l.reportId + ":", rightBoxX + 8, y + 21);
 
     doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
     doc.setTextColor(...colors.dark);
-    doc.text(today.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }), infoBoxX + 25, y + 2);
-    doc.text(billNo, infoBoxX + 25, y + 10);
+    doc.text(today.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }), rightBoxX + 45, y + 10);
+    doc.setFontSize(8);
+    doc.text(reportId, rightBoxX + 45, y + 21);
 
-    y += 25;
-    drawDashedLine(y);
-    y += 10;
+    y += infoBoxHeight + 15;
 
     // ========== USAGE PARAMETERS ==========
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.setTextColor(...colors.primaryDark);
-    doc.text(l.usageParams, margin, y);
+    doc.setTextColor(...colors.primary);
+    doc.text(l.usage, margin, y);
     y += 8;
 
-    // Parameters in a nice box
-    doc.setFillColor(...colors.bgGray);
-    doc.roundedRect(margin, y - 2, contentWidth, 16, 2, 2, "F");
+    const paramBoxWidth = (contentWidth - 10) / 2;
+    const paramBoxHeight = 22;
 
+    // Hours box
+    doc.setFillColor(...colors.tableHeader);
+    doc.roundedRect(margin, y, paramBoxWidth, paramBoxHeight, 3, 3, "F");
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.setTextColor(...colors.dark);
-    doc.text(l.dailyHours + ":", margin + 5, y + 6);
+    doc.setFontSize(8);
+    doc.setTextColor(...colors.gray);
+    doc.text(l.dailyHours, margin + 10, y + 8);
     doc.setFont("helvetica", "bold");
-    doc.text(`${duration} ${language === "en" ? "hours" : language === "hi" ? "घंटे" : "तास"}`, margin + 55, y + 6);
+    doc.setFontSize(12);
+    doc.setTextColor(...colors.primary);
+    doc.text(`${duration} ${l.hours}`, margin + 10, y + 17);
 
+    // Rate box
+    doc.setFillColor(...colors.tableHeader);
+    doc.roundedRect(margin + paramBoxWidth + 10, y, paramBoxWidth, paramBoxHeight, 3, 3, "F");
     doc.setFont("helvetica", "normal");
-    doc.text(l.electricityRate + ":", margin + 95, y + 6);
+    doc.setFontSize(8);
+    doc.setTextColor(...colors.gray);
+    doc.text(l.electricityRate, margin + paramBoxWidth + 20, y + 8);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(...colors.secondary);
-    doc.text(`₹${rate}/kWh`, margin + 140, y + 6);
+    doc.setFontSize(12);
+    doc.setTextColor(...colors.green);
+    doc.text(`${currency}${rate}${l.perKwh}`, margin + paramBoxWidth + 20, y + 17);
 
-    y += 22;
+    y += paramBoxHeight + 15;
 
-    // ========== ITEMIZED CONSUMPTION TABLE ==========
+    // ========== CONSUMPTION TABLE ==========
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.setTextColor(...colors.primaryDark);
-    doc.text(l.itemizedConsumption, margin, y);
-    y += 6;
+    doc.setTextColor(...colors.primary);
+    doc.text(l.breakdown, margin, y);
+    y += 8;
 
     // Table header
     doc.setFillColor(...colors.primary);
-    doc.rect(margin, y, contentWidth, 8, "F");
+    doc.rect(margin, y, contentWidth, 9, "F");
+
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(...colors.white);
-    doc.text(l.item, margin + 4, y + 5.5);
-    doc.text(l.qty, margin + 100, y + 5.5);
-    doc.text(l.power, margin + 120, y + 5.5);
-    doc.text(l.total, margin + 150, y + 5.5);
-    y += 10;
+    doc.text(l.appliance, margin + 5, y + 6);
+    doc.text(l.qty, margin + 100, y + 6);
+    doc.text(l.watts, margin + 120, y + 6);
+    doc.text(l.total, margin + 150, y + 6);
+    y += 11;
 
     let rowIndex = 0;
     rooms.forEach((room) => {
-      // Check for page break
-      if (y > pageHeight - 60) {
+      // Page break check
+      if (y > pageHeight - 80) {
         doc.addPage();
-        // Re-add top accent
         doc.setFillColor(...colors.primary);
-        doc.rect(0, 0, pageWidth, 4, "F");
+        doc.rect(0, 0, pageWidth, 8, "F");
         y = 20;
       }
 
       // Room header
-      doc.setFillColor(...colors.bgLight);
-      doc.rect(margin, y - 1, contentWidth, 7, "F");
+      doc.setFillColor(...colors.tableHeader);
+      doc.rect(margin, y, contentWidth, 8, "F");
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
-      doc.setTextColor(...colors.primaryDark);
-      doc.text(`📍 ${room.name}`, margin + 4, y + 4);
-      y += 9;
+      doc.setTextColor(...colors.primary);
+      doc.text(room.name.toUpperCase(), margin + 5, y + 5.5);
+      y += 10;
 
-      // Equipment items
+      // Equipment rows
       room.equipment.forEach((eq) => {
         if (eq.name && eq.watts > 0) {
-          // Alternating row colors
           if (rowIndex % 2 === 0) {
-            doc.setFillColor(252, 252, 252);
-            doc.rect(margin, y - 2, contentWidth, 6, "F");
+            doc.setFillColor(...colors.tableAlt);
+            doc.rect(margin, y - 1, contentWidth, 7, "F");
           }
 
           const totalWatts = eq.watts * eq.quantity;
+          const displayName = eq.name.length > 35 ? eq.name.substring(0, 32) + "..." : eq.name;
+
           doc.setFont("helvetica", "normal");
           doc.setFontSize(8);
           doc.setTextColor(...colors.dark);
+          doc.text("  " + displayName, margin + 5, y + 4);
+          doc.text(String(eq.quantity), margin + 102, y + 4);
+          doc.text(`${eq.watts}W`, margin + 120, y + 4);
 
-          // Truncate long names
-          const displayName = eq.name.length > 35 ? eq.name.substring(0, 32) + "..." : eq.name;
-          doc.text(`  ${displayName}`, margin + 4, y + 2);
-          doc.text(`${eq.quantity}`, margin + 102, y + 2);
-          doc.text(`${eq.watts}W`, margin + 120, y + 2);
           doc.setFont("helvetica", "bold");
-          doc.text(`${totalWatts.toLocaleString()}W`, margin + 150, y + 2);
-          y += 6;
+          doc.setTextColor(...colors.primary);
+          doc.text(`${totalWatts.toLocaleString()}W`, margin + 150, y + 4);
+
+          y += 7;
           rowIndex++;
         }
       });
 
       // Room subtotal
-      doc.setFillColor(...colors.bgGray);
-      doc.rect(margin + 80, y - 1, contentWidth - 80, 6, "F");
-      doc.setFont("helvetica", "italic");
+      doc.setFillColor(...colors.greenLight);
+      doc.rect(margin + 80, y, contentWidth - 80, 7, "F");
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(8);
-      doc.setTextColor(...colors.gray);
-      doc.text(`${l.subtotal}: ${room.totalPower.toLocaleString()}W | ₹${room.totalCost.toFixed(2)}${l.perDay}`, margin + 82, y + 3);
-      y += 10;
+      doc.setTextColor(...colors.green);
+      doc.text(`${l.roomTotal}: ${room.totalPower.toLocaleString()}W | ${currency}${room.totalCost.toFixed(2)}${l.perDay}`, margin + 85, y + 5);
+      y += 12;
     });
 
-    y += 5;
-    drawLine(y);
-    y += 12;
+    y += 8;
 
-    // ========== SUMMARY SECTION ==========
-    // Check for page break
-    if (y > pageHeight - 80) {
+    // ========== SUMMARY ==========
+    if (y > pageHeight - 75) {
       doc.addPage();
       doc.setFillColor(...colors.primary);
-      doc.rect(0, 0, pageWidth, 4, "F");
+      doc.rect(0, 0, pageWidth, 8, "F");
       y = 20;
     }
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
-    doc.setTextColor(...colors.primaryDark);
+    doc.setTextColor(...colors.primary);
     doc.text(l.summary, margin, y);
-    y += 8;
+    y += 10;
 
-    // Summary box with gradient-like effect
-    doc.setFillColor(...colors.bgLight);
-    doc.roundedRect(margin, y - 2, contentWidth, 42, 3, 3, "F");
-    doc.setDrawColor(...colors.primary);
+    // Summary box
+    const summaryHeight = 50;
+    doc.setFillColor(...colors.cream);
+    doc.roundedRect(margin, y, contentWidth, summaryHeight, 4, 4, "F");
+    doc.setDrawColor(...colors.primaryLight);
     doc.setLineWidth(0.5);
-    doc.roundedRect(margin, y - 2, contentWidth, 42, 3, 3, "S");
+    doc.roundedRect(margin, y, contentWidth, summaryHeight, 4, 4, "S");
 
-    // Summary rows
-    const summaryStartY = y + 6;
+    const col1X = margin + 15;
+    const col2X = margin + contentWidth / 2 + 10;
+    const row1Y = y + 14;
+    const row2Y = y + 36;
 
+    // Total Power
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(...colors.dark);
-    doc.text(l.totalPower, margin + 8, summaryStartY);
+    doc.setFontSize(8);
+    doc.setTextColor(...colors.gray);
+    doc.text(l.totalPower, col1X, row1Y - 5);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(...colors.primaryDark);
-    doc.text(`${householdValues.powerInKW.toFixed(2)} kW`, pageWidth - margin - 8 - doc.getTextWidth(`${householdValues.powerInKW.toFixed(2)} kW`), summaryStartY);
+    doc.setFontSize(14);
+    doc.setTextColor(...colors.dark);
+    doc.text(`${householdValues.powerInKW.toFixed(2)} kW`, col1X, row1Y + 4);
 
+    // Daily Cost
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(...colors.dark);
-    doc.text(l.dailyCost, margin + 8, summaryStartY + 10);
+    doc.setFontSize(8);
+    doc.setTextColor(...colors.gray);
+    doc.text(l.dailyCost, col2X, row1Y - 5);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(...colors.secondary);
-    doc.text(`₹${householdValues.dailyCost.toFixed(2)}`, pageWidth - margin - 8 - doc.getTextWidth(`₹${householdValues.dailyCost.toFixed(2)}`), summaryStartY + 10);
+    doc.setFontSize(14);
+    doc.setTextColor(...colors.green);
+    doc.text(`${currency}${householdValues.dailyCost.toFixed(2)}`, col2X, row1Y + 4);
 
-    // Monthly cost - highlighted
-    drawDashedLine(summaryStartY + 17);
-    doc.setFillColor(...colors.primary);
-    doc.roundedRect(margin + 4, summaryStartY + 20, contentWidth - 8, 12, 2, 2, "F");
-
+    // Monthly Cost
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...colors.gray);
+    doc.text(l.monthlyCost, col1X, row2Y - 5);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.setTextColor(...colors.white);
-    doc.text(l.monthlyCost, margin + 10, summaryStartY + 28);
-    doc.setFontSize(13);
-    doc.text(`₹${householdValues.monthlyCost.toFixed(2)}`, pageWidth - margin - 12 - doc.getTextWidth(`₹${householdValues.monthlyCost.toFixed(2)}`), summaryStartY + 28);
+    doc.setFontSize(16);
+    doc.setTextColor(...colors.primary);
+    doc.text(`${currency}${householdValues.monthlyCost.toFixed(2)}`, col1X, row2Y + 5);
 
-    y += 50;
+    // Yearly Cost
+    const yearlyCost = householdValues.monthlyCost * 12;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...colors.gray);
+    doc.text(l.yearlyCost, col2X, row2Y - 5);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(...colors.green);
+    doc.text(`${currency}${yearlyCost.toFixed(2)}`, col2X, row2Y + 5);
 
-    // ========== ENERGY TIPS SECTION ==========
+    y += summaryHeight + 15;
+
+    // ========== TIPS ==========
     if (tips.length > 0 && tips[0] !== "") {
-      if (y > pageHeight - 60) {
+      if (y > pageHeight - 50) {
         doc.addPage();
         doc.setFillColor(...colors.primary);
-        doc.rect(0, 0, pageWidth, 4, "F");
+        doc.rect(0, 0, pageWidth, 8, "F");
         y = 20;
       }
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10);
-      doc.setTextColor(...colors.secondary);
-      doc.text(`💡 ${l.energyTips}`, margin, y);
+      doc.setTextColor(...colors.green);
+      doc.text(l.tips, margin, y);
       y += 8;
 
-      doc.setFillColor(236, 253, 245); // Emerald-50
-      const tipsBoxHeight = tips.length * 12 + 8;
-      doc.roundedRect(margin, y - 2, contentWidth, tipsBoxHeight, 2, 2, "F");
+      doc.setFillColor(...colors.greenLight);
+      const tipsHeight = Math.min(tips.length * 10 + 8, 50);
+      doc.roundedRect(margin, y, contentWidth, tipsHeight, 3, 3, "F");
 
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
+      doc.setFontSize(8);
       doc.setTextColor(...colors.dark);
 
+      let tipY = y + 8;
       tips.forEach((tip, index) => {
-        if (tip && tip.trim()) {
-          const lines = doc.splitTextToSize(`${index + 1}. ${tip}`, contentWidth - 16);
-          lines.forEach((line: string, lineIndex: number) => {
-            doc.text(line, margin + 8, y + 5 + (lineIndex * 4));
-          });
-          y += 10;
+        if (tip && tip.trim() && tipY < y + tipsHeight - 5) {
+          const shortTip = tip.length > 80 ? tip.substring(0, 77) + "..." : tip;
+          doc.text(`${index + 1}. ${shortTip}`, margin + 8, tipY);
+          tipY += 10;
         }
       });
-      y += 5;
     }
 
     // ========== FOOTER ==========
     y = pageHeight - 25;
-    drawLine(y - 5, colors.lightGray, 0.3);
+
+    doc.setDrawColor(...colors.lightGray);
+    doc.setLineWidth(0.3);
+    doc.line(margin, y - 5, pageWidth - margin, y - 5);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7);
     doc.setTextColor(...colors.lightGray);
-
-    const footer1Width = doc.getTextWidth(l.footer1);
-    doc.text(l.footer1, (pageWidth - footer1Width) / 2, y);
-
-    const footer2Width = doc.getTextWidth(l.footer2);
-    doc.text(l.footer2, (pageWidth - footer2Width) / 2, y + 4);
+    doc.text(l.footer1, pageWidth / 2, y, { align: "center" });
+    doc.text(l.footer2, pageWidth / 2, y + 4, { align: "center" });
 
     doc.setFont("helvetica", "bold");
+    doc.setFontSize(7);
     doc.setTextColor(...colors.primary);
-    const footer3Width = doc.getTextWidth(l.footer3);
-    doc.text(l.footer3, (pageWidth - footer3Width) / 2, y + 10);
+    doc.text(l.footer3, pageWidth / 2, y + 9, { align: "center" });
 
-    // Bottom accent bar
+    // Bottom bar
     doc.setFillColor(...colors.primary);
-    doc.rect(0, pageHeight - 4, pageWidth, 4, "F");
+    doc.rect(0, pageHeight - 6, pageWidth, 6, "F");
 
-    // Save PDF
-    const fileName = `${customerName.trim().replace(/\s+/g, "-").toLowerCase()}-energy-bill.pdf`;
+    // Save
+    const fileName = `${customerName.trim().replace(/\s+/g, "-").toLowerCase()}-energy-report.pdf`;
     doc.save(fileName);
 
     setGeneratingPdf(false);
@@ -1049,22 +1084,24 @@ const ElectricalCalculator = () => {
   const householdValues = getTotalHouseholdValues();
 
   return (
-    <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6">
+    <div className="min-h-screen pt-20 pb-16 px-4 sm:px-6">
       {/* Bill Download Dialog */}
       <Dialog open={showBillDialog} onOpenChange={setShowBillDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md border-primary/20 bg-gradient-to-br from-card via-card to-primary/5">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5 text-amber-500" />
+            <DialogTitle className="flex items-center gap-3 text-xl">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-chart-4/20 flex items-center justify-center border border-primary/30">
+                <FileText className="w-5 h-5 text-primary" />
+              </div>
               {t("bill", "title")}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-muted-foreground">
               {t("bill", "description")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-foreground">
+              <label htmlFor="name" className="text-sm font-semibold text-foreground">
                 {t("bill", "yourName")}
               </label>
               <div className="relative">
@@ -1079,29 +1116,43 @@ const ElectricalCalculator = () => {
                       generateBillPDF();
                     }
                   }}
-                  className="pl-10"
+                  className="pl-10 h-11 rounded-xl border-primary/20 focus:border-primary"
                   autoFocus
                 />
               </div>
             </div>
-            <div className="rounded-lg bg-secondary/50 p-3 space-y-1">
-              <p className="text-xs text-muted-foreground">{t("bill", "billIncludes")}</p>
-              <ul className="text-xs text-muted-foreground space-y-0.5">
-                <li>• {rooms.length} {t("bill", "roomsWithDetails")}</li>
-                <li>• {t("bill", "totalPowerLabel")}: {householdValues.powerInKW.toFixed(2)} kW</li>
-                <li>• {t("bill", "monthlyEstimate")}: ₹{householdValues.monthlyCost.toFixed(2)}</li>
-                {tips.length > 0 && <li>• {tips.length} {t("bill", "aiTipsCount")}</li>}
+            <div className="rounded-2xl bg-gradient-to-br from-primary/5 to-chart-4/5 border border-primary/10 p-4 space-y-3">
+              <p className="text-xs font-semibold text-primary uppercase tracking-wider">{t("bill", "billIncludes")}</p>
+              <ul className="text-sm text-muted-foreground space-y-2">
+                <li className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-xs">🏠</span>
+                  {rooms.length} {t("bill", "roomsWithDetails")}
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-chart-4/10 flex items-center justify-center text-xs">⚡</span>
+                  {t("bill", "totalPowerLabel")}: <span className="font-semibold text-primary">{householdValues.powerInKW.toFixed(2)} kW</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-chart-2/10 flex items-center justify-center text-xs">💰</span>
+                  {t("bill", "monthlyEstimate")}: <span className="font-semibold text-chart-2">₹{householdValues.monthlyCost.toFixed(2)}</span>
+                </li>
+                {tips.length > 0 && (
+                  <li className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-chart-3/10 flex items-center justify-center text-xs">💡</span>
+                    {tips.length} {t("bill", "aiTipsCount")}
+                  </li>
+                )}
               </ul>
             </div>
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" onClick={() => setShowBillDialog(false)}>
+            <Button variant="outline" onClick={() => setShowBillDialog(false)} className="rounded-xl">
               {t("bill", "cancel")}
             </Button>
             <Button
               onClick={generateBillPDF}
               disabled={!customerName.trim() || generatingPdf}
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+              className="bg-gradient-to-r from-primary to-chart-4 hover:from-primary/90 hover:to-chart-4/90 text-primary-foreground rounded-xl"
             >
               {generatingPdf ? (
                 <>
@@ -1120,47 +1171,94 @@ const ElectricalCalculator = () => {
       </Dialog>
 
       <motion.div
-        className="max-w-3xl mx-auto space-y-6"
+        className="max-w-4xl mx-auto space-y-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Header */}
-        <motion.div className="text-center mb-8" variants={itemVariants}>
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-500 mb-4">
-            <Zap className="w-7 h-7" />
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
-            <span className="gradient-text">{t("calculator", "title")}</span>
+        <motion.div className="text-center mb-10" variants={itemVariants}>
+          <motion.div
+            className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-primary/20 via-chart-4/20 to-chart-5/20 border border-primary/30 mb-6 relative overflow-hidden"
+            whileHover={{ scale: 1.05, rotate: 3 }}
+            transition={{ type: "spring", stiffness: 400 }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            />
+            <Zap className="w-10 h-10 text-primary relative z-10" />
+          </motion.div>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
+            <span className="bg-gradient-to-r from-primary via-chart-4 to-chart-5 bg-clip-text text-transparent">
+              {t("calculator", "title")}
+            </span>
           </h1>
-          <p className="text-muted-foreground max-w-md mx-auto">
+          <p className="text-muted-foreground text-lg max-w-lg mx-auto leading-relaxed">
             {t("calculator", "subtitle")}
           </p>
         </motion.div>
 
+        {/* Quick Stats Banner (shows when rooms exist) */}
+        <AnimatePresence>
+          {rooms.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -20, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: -20, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary/5 via-chart-4/5 to-chart-5/5 border border-primary/20">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-primary">{rooms.length}</p>
+                  <p className="text-xs text-muted-foreground">{language === "en" ? "Rooms" : language === "hi" ? "कमरे" : "खोल्या"}</p>
+                </div>
+                <div className="text-center border-x border-border/50">
+                  <p className="text-2xl font-bold text-chart-4">{householdValues.powerInKW.toFixed(1)} kW</p>
+                  <p className="text-xs text-muted-foreground">{language === "en" ? "Total Power" : language === "hi" ? "कुल शक्ति" : "एकूण शक्ती"}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-chart-2">₹{householdValues.monthlyCost.toFixed(0)}</p>
+                  <p className="text-xs text-muted-foreground">{language === "en" ? "Monthly" : language === "hi" ? "मासिक" : "मासिक"}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Usage Settings Card */}
         <motion.div variants={itemVariants}>
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                  <Zap className="w-4 h-4 text-amber-500" />
+          <Card className="border-primary/20 bg-gradient-to-br from-card/90 via-card/70 to-primary/5 backdrop-blur-xl shadow-xl shadow-primary/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-chart-4/5 pointer-events-none" />
+            <CardHeader className="pb-4 relative">
+              <CardTitle className="text-xl font-bold flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-chart-4/20 flex items-center justify-center border border-primary/30">
+                  <Zap className="w-5 h-5 text-primary" />
                 </div>
                 {t("calculator", "usageSettings")}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-muted-foreground">
                 {language === "en" ? "Configure your daily usage hours and electricity rate" :
                  language === "hi" ? "अपने दैनिक उपयोग घंटे और बिजली दर कॉन्फ़िगर करें" :
                  "तुमचे दैनिक वापर तास आणि वीज दर कॉन्फिगर करा"}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
+            <CardContent className="space-y-8 relative">
+              <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <label className="text-sm font-medium text-foreground">{t("calculator", "hoursPerDay")}</label>
-                  <span className="text-sm font-semibold text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full">
+                  <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-primary" />
+                    {t("calculator", "hoursPerDay")}
+                  </label>
+                  <motion.span
+                    key={duration}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-sm font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full border border-primary/20"
+                  >
                     {duration} {t("calculator", "hours")}
-                  </span>
+                  </motion.span>
                 </div>
                 <Slider
                   min={1}
@@ -1168,15 +1266,28 @@ const ElectricalCalculator = () => {
                   step={1}
                   value={[duration]}
                   onValueChange={([value]) => setDuration(value)}
-                  className="[&_[role=slider]]:bg-amber-500 [&_[role=slider]]:border-0 [&_[role=slider]]:shadow-lg [&_[role=slider]]:shadow-amber-500/25"
+                  className="[&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-primary [&_[role=slider]]:to-chart-4 [&_[role=slider]]:border-0 [&_[role=slider]]:shadow-lg [&_[role=slider]]:shadow-primary/30 [&_[role=slider]]:w-5 [&_[role=slider]]:h-5"
                 />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>1h</span>
+                  <span>12h</span>
+                  <span>24h</span>
+                </div>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <label className="text-sm font-medium text-foreground">{t("calculator", "electricityRate")}</label>
-                  <span className="text-sm font-semibold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">
+                  <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-chart-2" />
+                    {t("calculator", "electricityRate")}
+                  </label>
+                  <motion.span
+                    key={rate}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-sm font-bold text-chart-2 bg-chart-2/10 px-4 py-1.5 rounded-full border border-chart-2/20"
+                  >
                     ₹{rate}/{t("calculator", "perKwh")}
-                  </span>
+                  </motion.span>
                 </div>
                 <Slider
                   min={1}
@@ -1184,8 +1295,13 @@ const ElectricalCalculator = () => {
                   step={0.5}
                   value={[rate]}
                   onValueChange={([value]) => setRate(value)}
-                  className="[&_[role=slider]]:bg-emerald-500 [&_[role=slider]]:border-0 [&_[role=slider]]:shadow-lg [&_[role=slider]]:shadow-emerald-500/25"
+                  className="[&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-chart-2 [&_[role=slider]]:to-chart-3 [&_[role=slider]]:border-0 [&_[role=slider]]:shadow-lg [&_[role=slider]]:shadow-chart-2/30 [&_[role=slider]]:w-5 [&_[role=slider]]:h-5"
                 />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>₹1</span>
+                  <span>₹10</span>
+                  <span>₹20</span>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -1193,10 +1309,15 @@ const ElectricalCalculator = () => {
 
         {/* Add Room Button */}
         <motion.div variants={itemVariants}>
-          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+          <motion.div
+            whileHover={{ scale: 1.01, y: -2 }}
+            whileTap={{ scale: 0.99 }}
+            className="relative"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-chart-4/20 to-chart-5/20 rounded-2xl blur-xl" />
             <Button
               onClick={addRoom}
-              className="w-full h-12 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold shadow-lg shadow-amber-500/25 border-0"
+              className="relative w-full h-14 bg-gradient-to-r from-primary via-chart-4 to-chart-5 hover:from-primary/90 hover:via-chart-4/90 hover:to-chart-5/90 text-primary-foreground font-bold text-base shadow-2xl shadow-primary/20 border-0 rounded-2xl"
             >
               <Plus className="mr-2 h-5 w-5" /> {t("calculator", "addRoom")}
             </Button>
@@ -1205,7 +1326,7 @@ const ElectricalCalculator = () => {
 
         {/* Rooms List */}
         <AnimatePresence mode="popLayout">
-          {rooms.map((room, index) => (
+          {rooms.map((room) => (
             <motion.div
               key={room.id}
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -1214,13 +1335,14 @@ const ElectricalCalculator = () => {
               transition={{ type: "spring", stiffness: 100, damping: 15 }}
               layout
             >
-              <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between gap-3">
+              <Card className="border-chart-5/30 bg-gradient-to-br from-card/90 via-card/70 to-chart-5/5 backdrop-blur-xl shadow-xl shadow-chart-5/5 overflow-hidden">
+                <CardHeader className="pb-3 relative">
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-chart-5/10 rounded-full blur-3xl" />
+                  <div className="flex items-center justify-between gap-3 relative">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <motion.button
                         onClick={() => toggleRoom(room.id)}
-                        className="w-8 h-8 rounded-lg bg-secondary/50 flex items-center justify-center shrink-0"
+                        className="w-10 h-10 rounded-xl bg-gradient-to-br from-chart-5/20 to-primary/20 flex items-center justify-center shrink-0 border border-chart-5/30"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -1228,34 +1350,45 @@ const ElectricalCalculator = () => {
                           animate={{ rotate: room.isExpanded ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                          <ChevronDown className="w-5 h-5 text-chart-5" />
                         </motion.div>
                       </motion.button>
-                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                        <Home className="w-4 h-4 text-blue-500" />
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-chart-4/20 flex items-center justify-center shrink-0 border border-primary/30">
+                        <Home className="w-5 h-5 text-primary" />
                       </div>
-                      <Input
-                        value={room.name}
-                        onChange={(e) =>
-                          setRooms(
-                            rooms.map((r) =>
-                              r.id === room.id ? { ...r, name: e.target.value } : r
+                      <div className="flex-1 min-w-0">
+                        <Input
+                          value={room.name}
+                          onChange={(e) =>
+                            setRooms(
+                              rooms.map((r) =>
+                                r.id === room.id ? { ...r, name: e.target.value } : r
+                              )
                             )
-                          )
-                        }
-                        className="text-base font-semibold border-0 bg-transparent px-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
-                      />
+                          }
+                          className="text-lg font-bold border-0 bg-transparent px-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {room.equipment.length} {language === "en" ? "items" : language === "hi" ? "उपकरण" : "वस्तू"} • {room.totalPower.toLocaleString()}W
+                        </p>
+                      </div>
                     </div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeRoom(room.id)}
-                        className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
-                    </motion.div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-right px-3 py-1 rounded-lg bg-chart-2/10 border border-chart-2/20 hidden sm:block">
+                        <p className="text-xs text-chart-2/70">{language === "en" ? "Daily" : language === "hi" ? "दैनिक" : "दैनिक"}</p>
+                        <p className="text-sm font-bold text-chart-2">₹{room.totalCost.toFixed(2)}</p>
+                      </div>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeRoom(room.id)}
+                          className="h-10 w-10 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 size={18} />
+                        </Button>
+                      </motion.div>
+                    </div>
                   </div>
                 </CardHeader>
 
@@ -1268,6 +1401,15 @@ const ElectricalCalculator = () => {
                       transition={{ duration: 0.2 }}
                     >
                       <CardContent className="space-y-3 pt-0">
+                        {room.equipment.length === 0 && (
+                          <div className="text-center py-8 text-muted-foreground">
+                            <div className="w-16 h-16 rounded-full bg-muted/20 flex items-center justify-center mx-auto mb-3">
+                              <Zap className="w-8 h-8 text-muted-foreground/50" />
+                            </div>
+                            <p className="text-sm">{language === "en" ? "No equipment added yet" : language === "hi" ? "अभी तक कोई उपकरण नहीं जोड़ा गया" : "अद्याप कोणतेही उपकरण जोडलेले नाही"}</p>
+                            <p className="text-xs text-muted-foreground/70">{language === "en" ? "Click below to add your first appliance" : language === "hi" ? "अपना पहला उपकरण जोड़ने के लिए नीचे क्लिक करें" : "तुमचे पहिले उपकरण जोडण्यासाठी खाली क्लिक करा"}</p>
+                          </div>
+                        )}
                         <AnimatePresence mode="popLayout">
                           {room.equipment.map((equipment) => (
                             <EquipmentSelector
@@ -1287,24 +1429,24 @@ const ElectricalCalculator = () => {
                         <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
                           <Button
                             onClick={() => addEquipment(room.id)}
-                            className="w-full"
+                            className="w-full h-11 border-dashed border-2 border-primary/30 hover:border-primary/50 hover:bg-primary/5"
                             variant="outline"
                           >
-                            <Plus className="mr-2 h-4 w-4" /> {t("calculator", "addEquipment")}
+                            <Plus className="mr-2 h-4 w-4 text-primary" /> {t("calculator", "addEquipment")}
                           </Button>
                         </motion.div>
                       </CardContent>
-                      <CardFooter className="border-t border-border/50 bg-secondary/20">
-                        <div className="w-full grid grid-cols-2 gap-4 py-2">
-                          <div className="text-center">
-                            <p className="text-xs text-muted-foreground mb-1">{t("calculator", "power")}</p>
-                            <p className="text-lg font-bold text-amber-500">
-                              {room.totalPower.toLocaleString()} W
+                      <CardFooter className="border-t border-chart-5/20 bg-gradient-to-r from-primary/5 via-chart-4/5 to-chart-5/5">
+                        <div className="w-full grid grid-cols-2 gap-4 py-3">
+                          <div className="text-center p-3 rounded-xl bg-background/50">
+                            <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">{t("calculator", "power")}</p>
+                            <p className="text-xl font-bold text-primary">
+                              {room.totalPower.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">W</span>
                             </p>
                           </div>
-                          <div className="text-center">
-                            <p className="text-xs text-muted-foreground mb-1">{t("calculator", "dailyCost")}</p>
-                            <p className="text-lg font-bold text-emerald-500">
+                          <div className="text-center p-3 rounded-xl bg-background/50">
+                            <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">{t("calculator", "dailyCost")}</p>
+                            <p className="text-xl font-bold text-chart-2">
                               ₹{room.totalCost.toFixed(2)}
                             </p>
                           </div>
@@ -1318,14 +1460,42 @@ const ElectricalCalculator = () => {
           ))}
         </AnimatePresence>
 
+        {/* Empty State */}
+        {rooms.length === 0 && (
+          <motion.div
+            variants={itemVariants}
+            className="text-center py-16 px-6 rounded-3xl border-2 border-dashed border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-chart-4/5"
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200 }}
+              className="w-24 h-24 rounded-3xl bg-gradient-to-br from-primary/10 to-chart-4/10 flex items-center justify-center mx-auto mb-6 border border-primary/20"
+            >
+              <Home className="w-12 h-12 text-primary/60" />
+            </motion.div>
+            <h3 className="text-xl font-bold mb-2">{language === "en" ? "No rooms added yet" : language === "hi" ? "अभी तक कोई कमरा नहीं जोड़ा गया" : "अद्याप कोणतीही खोली जोडलेली नाही"}</h3>
+            <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+              {language === "en" ? "Start by adding a room to calculate your household energy consumption" : language === "hi" ? "अपने घर की ऊर्जा खपत की गणना करने के लिए एक कमरा जोड़कर शुरू करें" : "तुमच्या घराच्या ऊर्जा वापराची गणना करण्यासाठी एक खोली जोडून सुरू करा"}
+            </p>
+            <Button
+              onClick={addRoom}
+              className="bg-gradient-to-r from-primary to-chart-4 hover:from-primary/90 hover:to-chart-4/90 text-primary-foreground font-semibold px-8"
+            >
+              <Plus className="mr-2 h-5 w-5" /> {t("calculator", "addRoom")}
+            </Button>
+          </motion.div>
+        )}
+
         {/* Household Summary Card */}
         <motion.div variants={itemVariants}>
-          <Card className="border-border/50 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm">
-            <CardHeader className="pb-4">
+          <Card className="border-chart-2/30 bg-gradient-to-br from-card/90 via-card/70 to-chart-2/5 backdrop-blur-xl shadow-xl shadow-chart-2/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-chart-2/5 via-transparent to-chart-3/5 pointer-events-none" />
+            <CardHeader className="pb-4 relative">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                    <Home className="w-4 h-4 text-emerald-500" />
+                <CardTitle className="text-xl font-bold flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-chart-2/20 to-chart-3/20 flex items-center justify-center border border-chart-2/30">
+                    <Home className="w-5 h-5 text-chart-2" />
                   </div>
                   {t("calculator", "householdSummary")}
                 </CardTitle>
@@ -1335,7 +1505,7 @@ const ElectricalCalculator = () => {
                     size="sm"
                     onClick={() => setShowBillDialog(true)}
                     disabled={rooms.length === 0 || householdValues.totalPower === 0}
-                    className="gap-2 border-amber-500/30 text-amber-500 hover:bg-amber-500/10 hover:text-amber-400 hover:border-amber-500/50"
+                    className="gap-2 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary hover:border-primary/50 rounded-xl"
                   >
                     <Download className="w-4 h-4" />
                     {t("calculator", "downloadBill")}
@@ -1343,29 +1513,44 @@ const ElectricalCalculator = () => {
                 </motion.div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="relative">
               <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 rounded-xl bg-secondary/30 border border-border/50">
-                  <p className="text-xs text-muted-foreground mb-1">{t("calculator", "totalPower")}</p>
-                  <p className="text-xl font-bold text-amber-500">
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="text-center p-5 rounded-2xl bg-gradient-to-br from-primary/10 to-chart-4/10 border border-primary/20"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-3">
+                    <Zap className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-2xl font-bold text-primary">
                     {householdValues.powerInKW.toFixed(2)}
                   </p>
-                  <p className="text-xs text-muted-foreground">kW</p>
-                </div>
-                <div className="text-center p-4 rounded-xl bg-secondary/30 border border-border/50">
-                  <p className="text-xs text-muted-foreground mb-1">{t("calculator", "dailyCost")}</p>
-                  <p className="text-xl font-bold text-emerald-500">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide mt-1">kW {t("calculator", "totalPower")}</p>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="text-center p-5 rounded-2xl bg-gradient-to-br from-chart-2/10 to-chart-3/10 border border-chart-2/20"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-chart-2/20 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-lg">📅</span>
+                  </div>
+                  <p className="text-2xl font-bold text-chart-2">
                     ₹{householdValues.dailyCost.toFixed(2)}
                   </p>
-                  <p className="text-xs text-muted-foreground">{t("calculator", "perDay")}</p>
-                </div>
-                <div className="text-center p-4 rounded-xl bg-secondary/30 border border-border/50">
-                  <p className="text-xs text-muted-foreground mb-1">{t("calculator", "monthlyCost")}</p>
-                  <p className="text-xl font-bold text-blue-500">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide mt-1">{t("calculator", "perDay")}</p>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="text-center p-5 rounded-2xl bg-gradient-to-br from-chart-5/10 to-chart-1/10 border border-chart-5/20"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-chart-5/20 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-lg">📆</span>
+                  </div>
+                  <p className="text-2xl font-bold text-chart-5">
                     ₹{householdValues.monthlyCost.toFixed(2)}
                   </p>
-                  <p className="text-xs text-muted-foreground">{t("calculator", "perMonth")}</p>
-                </div>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide mt-1">{t("calculator", "perMonth")}</p>
+                </motion.div>
               </div>
             </CardContent>
           </Card>
@@ -1373,11 +1558,17 @@ const ElectricalCalculator = () => {
 
         {/* Energy Saving Tips Card */}
         <motion.div variants={itemVariants}>
-          <Card className="border-border/50 bg-gradient-to-br from-card/80 via-card/60 to-emerald-500/5 backdrop-blur-sm overflow-hidden">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-emerald-500" />
+          <Card className="border-chart-3/30 bg-gradient-to-br from-card/90 via-card/70 to-chart-3/5 backdrop-blur-xl shadow-xl shadow-chart-3/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-chart-3/5 via-transparent to-chart-2/5 pointer-events-none" />
+            <CardHeader className="pb-4 relative">
+              <CardTitle className="text-xl font-bold flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-chart-3/20 to-chart-2/20 flex items-center justify-center border border-chart-3/30 relative overflow-hidden">
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-chart-3/20 to-transparent"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  />
+                  <Zap className="w-5 h-5 text-chart-3 relative z-10" />
                 </div>
                 <div className="flex-1">
                   <span>{t("calculator", "smartTips")}</span>
@@ -1387,30 +1578,34 @@ const ElectricalCalculator = () => {
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-                <Button
-                  onClick={getEnergySavingTips}
-                  disabled={loading || rooms.length === 0}
-                  className="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg shadow-emerald-500/25 border-0 disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      {t("calculator", "analyzing")}
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="mr-2 h-5 w-5" />
-                      {t("calculator", "generateTips")}
-                    </>
-                  )}
-                </Button>
+            <CardContent className="space-y-4 relative">
+              <motion.div whileHover={{ scale: 1.01, y: -1 }} whileTap={{ scale: 0.99 }}>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-chart-3/20 to-chart-2/20 rounded-2xl blur-xl" />
+                  <Button
+                    onClick={getEnergySavingTips}
+                    disabled={loading || rooms.length === 0}
+                    className="relative w-full h-14 bg-gradient-to-r from-chart-3 to-chart-2 hover:from-chart-3/90 hover:to-chart-2/90 text-white font-bold text-base shadow-2xl shadow-chart-3/20 border-0 rounded-2xl disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        {t("calculator", "analyzing")}
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="mr-2 h-5 w-5" />
+                        {t("calculator", "generateTips")}
+                      </>
+                    )}
+                  </Button>
+                </div>
               </motion.div>
 
               {tips.length > 0 && (
-                <div className="space-y-3 pt-2">
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">
+                <div className="space-y-3 pt-4">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold flex items-center gap-2">
+                    <span className="w-6 h-[2px] bg-gradient-to-r from-chart-3 to-chart-2 rounded-full" />
                     {language === "en" ? "Recommendations" : language === "hi" ? "सुझाव" : "शिफारसी"}
                   </p>
                   <AnimatePresence mode="popLayout">
@@ -1421,12 +1616,12 @@ const ElectricalCalculator = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex gap-3 p-4 rounded-xl bg-background/50 border border-border/50"
+                        className="flex gap-4 p-5 rounded-2xl bg-gradient-to-br from-background/80 to-chart-3/5 border border-chart-3/20 hover:border-chart-3/40 transition-colors"
                       >
-                        <div className="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <span className="text-xs font-bold text-emerald-500">{index + 1}</span>
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-chart-3/20 to-chart-2/20 flex items-center justify-center shrink-0 border border-chart-3/30">
+                          <span className="text-sm font-bold text-chart-3">{index + 1}</span>
                         </div>
-                        <p className="text-sm text-foreground leading-relaxed">
+                        <p className="text-sm text-foreground leading-relaxed pt-1">
                           {tip}
                         </p>
                       </motion.div>

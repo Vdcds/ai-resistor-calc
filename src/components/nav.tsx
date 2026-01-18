@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Home, Calculator, Zap, Globe, Check } from "lucide-react";
+import { Menu, X, Home, Calculator, Globe, Check, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/lib/language-context";
+import { useTheme } from "@/lib/theme-context";
 import { Language, languageNames, languageFlags } from "@/lib/translations";
 
 const NavBar = () => {
@@ -20,6 +22,7 @@ const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { language, setLanguage, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { nameKey: "home", path: "/", icon: Home },
@@ -50,17 +53,17 @@ const NavBar = () => {
           {/* Logo Section */}
           <Link href="/" className="flex items-center gap-3 group">
             <motion.div
-              className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg shadow-amber-500/25"
+              className="relative flex items-center justify-center w-10 h-10"
               whileHover={{ scale: 1.05, rotate: 5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Zap className="w-5 h-5 text-white" />
-              <motion.div
-                className="absolute inset-0 rounded-xl bg-gradient-to-br from-amber-400 to-orange-400 opacity-0 group-hover:opacity-100"
-                initial={false}
-                transition={{ duration: 0.3 }}
+              <Image
+                src="/logo.png"
+                alt="EnergyCalc Logo"
+                width={40}
+                height={40}
+                className="object-contain"
               />
-              <Zap className="absolute w-5 h-5 text-white" />
             </motion.div>
             <div className="hidden sm:block">
               <motion.span
@@ -68,7 +71,7 @@ const NavBar = () => {
                 whileHover={{ x: 2 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                Energy<span className="text-amber-500">Calc</span>
+                Energy<span className="text-primary">Calc</span>
               </motion.span>
             </div>
           </Link>
@@ -88,7 +91,7 @@ const NavBar = () => {
                       variant="ghost"
                       className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 ${
                         isActive
-                          ? "text-amber-500"
+                          ? "text-primary"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -98,7 +101,7 @@ const NavBar = () => {
                     {isActive && (
                       <motion.div
                         layoutId="activeTab"
-                        className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                        className="absolute bottom-0 left-2 right-2 h-0.5 bg-primary rounded-full"
                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
@@ -106,6 +109,42 @@ const NavBar = () => {
                 </Link>
               );
             })}
+
+            {/* Theme Switcher - Desktop */}
+            <div className="ml-2 pl-2 border-l border-border/50">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleTheme}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <AnimatePresence mode="wait">
+                    {theme === "light" ? (
+                      <motion.div
+                        key="sun"
+                        initial={{ rotate: -90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: 90, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Sun className="w-5 h-5" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="moon"
+                        initial={{ rotate: 90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: -90, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Moon className="w-5 h-5" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Button>
+              </motion.div>
+            </div>
 
             {/* Language Switcher - Desktop */}
             <div className="ml-2 pl-2 border-l border-border/50">
@@ -133,7 +172,7 @@ const NavBar = () => {
                         <span>{languageNames[lang]}</span>
                       </span>
                       {language === lang && (
-                        <Check className="w-4 h-4 text-amber-500" />
+                        <Check className="w-4 h-4 text-primary" />
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -205,7 +244,7 @@ const NavBar = () => {
                         variant="ghost"
                         className={`w-full justify-start text-base ${
                           isActive
-                            ? "text-amber-500 bg-amber-500/10"
+                            ? "text-primary bg-primary/10"
                             : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                         }`}
                       >
@@ -217,11 +256,37 @@ const NavBar = () => {
                 );
               })}
 
-              {/* Language Switcher - Mobile */}
+              {/* Theme Switcher - Mobile */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navItems.length * 0.1 }}
+                className="pt-2 mt-2 border-t border-border/50"
+              >
+                <Button
+                  variant="ghost"
+                  onClick={toggleTheme}
+                  className="w-full justify-start text-base text-muted-foreground hover:text-foreground hover:bg-secondary"
+                >
+                  {theme === "light" ? (
+                    <>
+                      <Sun className="w-5 h-5 mr-3" />
+                      Light Mode
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="w-5 h-5 mr-3" />
+                      Dark Mode
+                    </>
+                  )}
+                </Button>
+              </motion.div>
+
+              {/* Language Switcher - Mobile */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: (navItems.length + 1) * 0.1 }}
                 className="pt-2 mt-2 border-t border-border/50"
               >
                 <div className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
@@ -239,7 +304,7 @@ const NavBar = () => {
                       }}
                       className={`flex-col h-auto py-3 ${
                         language === lang
-                          ? "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+                          ? "bg-primary/20 text-primary border border-primary/30"
                           : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
