@@ -505,6 +505,55 @@ export const translations = {
     },
   },
 
+  // Bill Comparison
+  comparison: {
+    title: {
+      en: "See Bill Comparison",
+      hi: "बिल तुलना देखें",
+      mr: "बिल तुलना पहा",
+    },
+    description: {
+      en: "View your estimated savings with the recommended changes",
+      hi: "अनुशंसित बदलावों के साथ अपनी अनुमानित बचत देखें",
+      mr: "शिफारस केलेल्या बदलांसह तुमची अंदाजित बचत पहा",
+    },
+    currentBill: {
+      en: "Current Bill",
+      hi: "वर्तमान बिल",
+      mr: "वर्तमान बिल",
+    },
+    projectedBill: {
+      en: "Projected Bill",
+      hi: "अनुमानित बिल",
+      mr: "अंदाजित बिल",
+    },
+    monthlySavings: {
+      en: "Monthly Savings",
+      hi: "मासिक बचत",
+      mr: "मासिक बचत",
+    },
+    yearlySavings: {
+      en: "Yearly Savings",
+      hi: "वार्षिक बचत",
+      mr: "वार्षिक बचत",
+    },
+    savingsPercentage: {
+      en: "Savings",
+      hi: "बचत",
+      mr: "बचत",
+    },
+    closeButton: {
+      en: "Close",
+      hi: "बंद करें",
+      mr: "बंद करा",
+    },
+    viewComparison: {
+      en: "View Comparison",
+      hi: "तुलना देखें",
+      mr: "तुलना पहा",
+    },
+  },
+
   // Common
   common: {
     kw: {

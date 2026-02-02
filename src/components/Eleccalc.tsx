@@ -86,6 +86,11 @@ interface Equipment {
   quantity: number;
 }
 
+interface Tip {
+  tip: string;
+  savings: number;
+}
+
 interface Room {
   id: string;
   name: string;
@@ -440,8 +445,9 @@ const ElectricalCalculator = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [duration, setDuration] = useState(8);
   const [rate, setRate] = useState(5);
-  const [tips, setTips] = useState<string[]>([]);
+  const [tips, setTips] = useState<Tip[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showComparisonDialog, setShowComparisonDialog] = useState(false);
   const [showBillDialog, setShowBillDialog] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [generatingPdf, setGeneratingPdf] = useState(false);
@@ -609,7 +615,18 @@ const ElectricalCalculator = () => {
       if (!response.ok) throw new Error("Failed to fetch tips");
 
       const tipsData = await response.json();
-      setTips(Array.isArray(tipsData) ? tipsData : [tipsData]);
+      // Handle both old format (string array) and new format (Tip array)
+      if (Array.isArray(tipsData)) {
+        if (tipsData.length > 0 && typeof tipsData[0] === 'string') {
+          // Convert old string format to new Tip format
+          setTips(tipsData.map((tip: string) => ({ tip, savings: 0 })));
+        } else {
+          // New Tip format
+          setTips(tipsData);
+        }
+      } else {
+        setTips([{ tip: tipsData, savings: 0 }]);
+      }
     } catch (error) {
       console.error("Error fetching tips:", error);
       const errorMessage = language === "en"
@@ -617,7 +634,7 @@ const ElectricalCalculator = () => {
         : language === "hi"
         ? "सुझाव प्राप्त करने में असमर्थ। कृपया बाद में पुनः प्रयास करें।"
         : "सल्ले मिळवण्यात अक्षम. कृपया नंतर पुन्हा प्रयत्न करा.";
-      setTips([errorMessage]);
+      setTips([{ tip: errorMessage, savings: 0 }]);
     } finally {
       setLoading(false);
     }
@@ -1018,7 +1035,7 @@ const ElectricalCalculator = () => {
     y += summaryHeight + 15;
 
     // ========== TIPS ==========
-    if (tips.length > 0 && tips[0] !== "") {
+    if (tips.length > 0 && tips[0].tip !== "") {
       if (y > pageHeight - 50) {
         doc.addPage();
         doc.setFillColor(...colors.primary);
@@ -1041,9 +1058,9 @@ const ElectricalCalculator = () => {
       doc.setTextColor(...colors.dark);
 
       let tipY = y + 8;
-      tips.forEach((tip, index) => {
-        if (tip && tip.trim() && tipY < y + tipsHeight - 5) {
-          const shortTip = tip.length > 80 ? tip.substring(0, 77) + "..." : tip;
+      tips.forEach((tipItem, index) => {
+        if (tipItem.tip && tipItem.tip.trim() && tipY < y + tipsHeight - 5) {
+          const shortTip = tipItem.tip.length > 80 ? tipItem.tip.substring(0, 77) + "..." : tipItem.tip;
           doc.text(`${index + 1}. ${shortTip}`, margin + 8, tipY);
           tipY += 10;
         }
@@ -1609,7 +1626,7 @@ const ElectricalCalculator = () => {
                     {language === "en" ? "Recommendations" : language === "hi" ? "सुझाव" : "शिफारसी"}
                   </p>
                   <AnimatePresence mode="popLayout">
-                    {tips.map((tip, index) => (
+                    {tips.map((tipItem, index) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, x: -20 }}
@@ -1621,18 +1638,147 @@ const ElectricalCalculator = () => {
                         <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-chart-3/20 to-chart-2/20 flex items-center justify-center shrink-0 border border-chart-3/30">
                           <span className="text-sm font-bold text-chart-3">{index + 1}</span>
                         </div>
-                        <p className="text-sm text-foreground leading-relaxed pt-1">
-                          {tip}
-                        </p>
+                        <div className="flex-1">
+                          <p className="text-sm text-foreground leading-relaxed pt-1">
+                            {tipItem.tip}
+                          </p>
+                          {tipItem.savings > 0 && (
+                            <p className="text-xs text-green-600 mt-2 font-semibold">
+                              💰 Estimated yearly savings: ₹{tipItem.savings.toFixed(0)}
+                            </p>
+                          )}
+                        </div>
                       </motion.div>
                     ))}
                   </AnimatePresence>
+
+                  {/* Comparison Button */}
+                  {tips.length > 0 && tips.some(tip => tip.savings > 0) && (
+                    <motion.div
+                      whileHover={{ scale: 1.01, y: -1 }}
+                      whileTap={{ scale: 0.99 }}
+                      className="pt-4"
+                    >
+                      <Button
+                        onClick={() => setShowComparisonDialog(true)}
+                        className="w-full h-12 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold text-sm shadow-lg border-0 rounded-xl"
+                      >
+                        📊 {t("comparison", "viewComparison")}
+                      </Button>
+                    </motion.div>
+                  )}
                 </div>
               )}
             </CardContent>
           </Card>
         </motion.div>
       </motion.div>
+
+      {/* Bill Comparison Dialog */}
+      <Dialog open={showComparisonDialog} onOpenChange={setShowComparisonDialog}>
+        <DialogContent className="sm:max-w-lg border-primary/20 bg-gradient-to-br from-card via-card to-primary/5">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3 text-xl">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center border border-green-500/30">
+                📊
+              </div>
+              {t("comparison", "title")}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {t("comparison", "description")}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6 py-4">
+            {/* Current Bill */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 border border-red-200">
+              <h3 className="text-lg font-bold text-red-700 mb-3">{t("comparison", "currentBill")}</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-red-600">Monthly</p>
+                  <p className="text-2xl font-bold text-red-700">₹{householdValues.monthlyCost.toFixed(2)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-red-600">Yearly</p>
+                  <p className="text-2xl font-bold text-red-700">₹{(householdValues.monthlyCost * 12).toFixed(2)}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Projected Bill */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
+              <h3 className="text-lg font-bold text-green-700 mb-3">{t("comparison", "projectedBill")}</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {(() => {
+                  const totalYearlySavings = tips.reduce((acc, tip) => acc + tip.savings, 0);
+                  const yearlyBill = householdValues.monthlyCost * 12;
+                  // Cap savings at 50% of bill for realistic projections
+                  const cappedYearlySavings = Math.min(totalYearlySavings, yearlyBill * 0.5);
+                  const projectedYearly = yearlyBill - cappedYearlySavings;
+                  const projectedMonthly = projectedYearly / 12;
+                  return (
+                    <>
+                      <div>
+                        <p className="text-sm text-green-600">Monthly</p>
+                        <p className="text-2xl font-bold text-green-700">₹{projectedMonthly.toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-green-600">Yearly</p>
+                        <p className="text-2xl font-bold text-green-700">₹{projectedYearly.toFixed(2)}</p>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+
+            {/* Savings */}
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
+              <h3 className="text-lg font-bold text-blue-700 mb-3">💰 Your Savings</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {(() => {
+                  const totalYearlySavings = tips.reduce((acc, tip) => acc + tip.savings, 0);
+                  const yearlyBill = householdValues.monthlyCost * 12;
+                  // Cap savings at 50% of bill for realistic projections
+                  const cappedYearlySavings = Math.min(totalYearlySavings, yearlyBill * 0.5);
+                  const cappedMonthlySavings = cappedYearlySavings / 12;
+                  return (
+                    <>
+                      <div>
+                        <p className="text-sm text-blue-600">{t("comparison", "monthlySavings")}</p>
+                        <p className="text-2xl font-bold text-blue-700">₹{cappedMonthlySavings.toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-blue-600">{t("comparison", "yearlySavings")}</p>
+                        <p className="text-2xl font-bold text-blue-700">₹{cappedYearlySavings.toFixed(2)}</p>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+              <div className="mt-3 pt-3 border-t border-blue-200">
+                <p className="text-sm font-semibold text-blue-700">
+                  {(() => {
+                    const totalYearlySavings = tips.reduce((acc, tip) => acc + tip.savings, 0);
+                    const yearlyBill = householdValues.monthlyCost * 12;
+                    const cappedYearlySavings = Math.min(totalYearlySavings, yearlyBill * 0.5);
+                    const savingsPercentage = yearlyBill > 0 ? (cappedYearlySavings / yearlyBill) * 100 : 0;
+                    return savingsPercentage.toFixed(1);
+                  })()}% {t("comparison", "savingsPercentage")}
+                </p>
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowComparisonDialog(false)}
+              className="rounded-xl"
+            >
+              {t("comparison", "closeButton")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
