@@ -15,18 +15,17 @@ const calculateSavings = (tip: string, consumptionData: string): number => {
   const powerMatch = consumptionData.match(/(\d+\.?\d*)kW/);
   const dailyCostMatch = consumptionData.match(/₹(\d+\.?\d*)\s*per day/);
   const monthlyCostMatch = consumptionData.match(/₹(\d+\.?\d*)\s*per month/);
-  
+
   if (!powerMatch || !dailyCostMatch || !monthlyCostMatch) {
     return 0;
   }
-  
-  const powerInKW = parseFloat(powerMatch[1]);
-  const dailyCost = parseFloat(dailyCostMatch[1]);
+
+
   const monthlyCost = parseFloat(monthlyCostMatch[1]);
-  
+
   // Estimate savings based on common efficiency improvements
   let savingsPercent = 0;
-  
+
   // LED bulbs (typically 60-80% savings)
   if (tip.toLowerCase().includes('led') || tip.toLowerCase().includes('bulb')) {
     savingsPercent = 0.7;
@@ -47,10 +46,10 @@ const calculateSavings = (tip: string, consumptionData: string): number => {
   else {
     savingsPercent = 0.15;
   }
-  
+
   const monthlySavings = monthlyCost * savingsPercent;
   const yearlySavings = monthlySavings * 12;
-  
+
   return yearlySavings;
 };
 
